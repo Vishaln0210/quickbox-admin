@@ -1,7 +1,7 @@
 import "./Home.css";
-import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
+import Widget from "../../components/widget/Widget";
 
 const Home = () => {
   return (

@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '../css/ProductManagement.css';
 
-// Mock data (replace with API calls)
-const mockProducts = [
-  {
-    id: "sc1",
-    adminId: "monu",
-    image: "example.jpg",
-    product_name: "Banana - Yelakki",
-    quantity: 1,
-    weight: "500 g",
-    price: 48,
-    discount: 10,
-    total_price: null,
-    status: null,
-    description: "Fresh, tiny small sized, directly procured from the farm, this variety…"
-  }
-  // Add more products as needed
-];
-
 const ProductManagement = () => {
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState([]);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [form, setForm] = useState({
     adminId: '',
@@ -36,10 +19,14 @@ const ProductManagement = () => {
   });
 
   useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
     if (currentProduct) {
       setForm({
         adminId: currentProduct.adminId,
-        image: null,
+        image: currentProduct.image,
         product_name: currentProduct.product_name,
         quantity: currentProduct.quantity,
         weight: currentProduct.weight,
@@ -65,49 +52,69 @@ const ProductManagement = () => {
     }
   }, [currentProduct]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/products');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
   const handleImageChange = (e) => {
-    setForm({ ...form, image: e.target.files[0] });
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm({ ...form, image: reader.result });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (currentProduct) {
-      // Update product
-      setProducts(products.map((prod) =>
-        prod.id === currentProduct.id
-          ? { ...prod, ...form, image: form.image ? URL.createObjectURL(form.image) : prod.image }
-          : prod
-      ));
-    } else {
-      // Create product
-      setProducts([...products, { id: Date.now().toString(), ...form, image: form.image ? URL.createObjectURL(form.image) : null }]);
+    try {
+      if (currentProduct) {
+        await axios.put(`http://localhost:8080/api/products/${currentProduct.id}`, form);
+      } else {
+        await axios.post('http://localhost:8080/api/products', form);
+      }
+      fetchProducts();
+      setCurrentProduct(null);
+      setForm({
+        adminId: '',
+        image: null,
+        product_name: '',
+        quantity: '',
+        weight: '',
+        price: '',
+        discount: '',
+        total_price: '',
+        status: '',
+        description: ''
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
-    setCurrentProduct(null);
-    setForm({
-      adminId: '',
-      image: null,
-      product_name: '',
-      quantity: '',
-      weight: '',
-      price: '',
-      discount: '',
-      total_price: '',
-      status: '',
-      description: ''
-    });
   };
 
   const handleEdit = (product) => {
     setCurrentProduct(product);
   };
 
-  const handleDelete = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/products/${id}`);
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
   };
 
   return (
@@ -127,7 +134,7 @@ const ProductManagement = () => {
           name="image"
           onChange={handleImageChange}
         />
-        {form.image && <img src={URL.createObjectURL(form.image)} alt="Preview" className="image-preview" />}
+        {form.image && <img src={form.image} alt="Preview" className="image-preview" />}
         <input
           type="text"
           name="product_name"
