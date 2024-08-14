@@ -4,22 +4,25 @@ import '../css/ProductManagement.css';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [form, setForm] = useState({
     adminId: '',
     image: null,
-    product_name: '',
+    productName: '',
     quantity: '',
     weight: '',
     price: '',
     discount: '',
     total_price: '',
     status: '',
-    description: ''
+    description: '',
+    category: '' // New field for category
   });
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories(); // Fetch categories when component mounts
   }, []);
 
   useEffect(() => {
@@ -27,27 +30,29 @@ const ProductManagement = () => {
       setForm({
         adminId: currentProduct.adminId,
         image: currentProduct.image,
-        product_name: currentProduct.product_name,
+        productName: currentProduct.productName,
         quantity: currentProduct.quantity,
         weight: currentProduct.weight,
         price: currentProduct.price,
         discount: currentProduct.discount,
         total_price: currentProduct.total_price,
         status: currentProduct.status,
-        description: currentProduct.description
+        description: currentProduct.description,
+        category: currentProduct.category // Set category from current product
       });
     } else {
       setForm({
         adminId: '',
         image: null,
-        product_name: '',
+        productName: '',
         quantity: '',
         weight: '',
         price: '',
         discount: '',
         total_price: '',
         status: '',
-        description: ''
+        description: '',
+        category: '' // Reset category when no current product
       });
     }
   }, [currentProduct]);
@@ -58,6 +63,15 @@ const ProductManagement = () => {
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/categories'); // Adjust endpoint if needed
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
     }
   };
 
@@ -77,6 +91,10 @@ const ProductManagement = () => {
     }
   };
 
+  const handleCategoryChange = (e) => {
+    setForm({ ...form, category: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -90,14 +108,15 @@ const ProductManagement = () => {
       setForm({
         adminId: '',
         image: null,
-        product_name: '',
+        productName: '',
         quantity: '',
         weight: '',
         price: '',
         discount: '',
         total_price: '',
         status: '',
-        description: ''
+        description: '',
+        category: '' // Reset category on form submission
       });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -137,8 +156,8 @@ const ProductManagement = () => {
         {form.image && <img src={form.image} alt="Preview" className="image-preview" />}
         <input
           type="text"
-          name="product_name"
-          value={form.product_name}
+          name="productName"
+          value={form.productName}
           onChange={handleInputChange}
           placeholder="Product Name"
           required
@@ -195,9 +214,13 @@ const ProductManagement = () => {
           onChange={handleInputChange}
           placeholder="Description"
         />
+        
+       
+
         <button type="submit">{currentProduct ? 'Update Product' : 'Add Product'}</button>
         {currentProduct && <button type="button" onClick={() => setCurrentProduct(null)}>Cancel</button>}
       </form>
+      
       <div className="product-list">
         <h3>Product List</h3>
         <table>
@@ -211,33 +234,32 @@ const ProductManagement = () => {
               <th>Weight</th>
               <th>Price</th>
               <th>Discount</th>
-              <th>Total Price</th>
               <th>Status</th>
               <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.adminId}</td>
-                <td><img src={product.image} alt={product.product_name} className="image-preview" /></td>
-                <td>{product.product_name}</td>
-                <td>{product.quantity}</td>
-                <td>{product.weight}</td>
-                <td>${product.price}</td>
-                <td>{product.discount}%</td>
-                <td>{product.total_price ? `$${product.total_price}` : '-'}</td>
-                <td>{product.status || '-'}</td>
-                <td>{product.description}</td>
-                <td>
-                  <button onClick={() => handleEdit(product)}>Edit</button>
-                  <button onClick={() => handleDelete(product.id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {products.map((product) => (
+    <tr key={product.id}>
+      <td>{product.id}</td>
+      <td>{product.adminId}</td>
+      <td><img src={product.image} alt={product.productName} className="image-preview" /></td>
+      <td>{product.productName || 'N/A'}</td> {/* Display product name */}
+      <td>{product.quantity}</td>
+      <td>{product.weight}</td>
+      <td>Rs.{product.price}</td>
+      <td>{product.discount}%</td>
+      <td>{product.status || '-'}</td>
+      <td>{product.description}</td>
+      <td>
+        <button onClick={() => handleEdit(product)}>Edit</button>
+        <button onClick={() => handleDelete(product.id)}>Delete</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
     </div>

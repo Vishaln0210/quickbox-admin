@@ -1,11 +1,83 @@
+/* Container for the order management section */
 .order-management {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .order-management h2 {
-    margin-top: 0;
-  }
-  
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Title styling */
+.order-management h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+/* Table styling */
+.order-management table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.order-management table th,
+.order-management table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.order-management table th {
+  background-color: #173e09;
+  color: #fff;
+  font-weight: 700;
+}
+
+.order-management table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Action buttons styling */
+.order-management button {
+  background-color: #0a3006;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.order-management button:hover {
+  background-color: #084417;
+}
+
+.order-management button:disabled {
+  background-color: #b0b0b0;
+  cursor: not-allowed;
+}
+
+/* Error and Loading text styling */
+.order-management p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.order-management .loading {
+  font-style: italic;
+  color: #063606;
+}
+
+.order-management .error {
+  color: #dc3545;
+  font-weight: bold;
+}

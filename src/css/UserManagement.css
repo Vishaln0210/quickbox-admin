@@ -1,11 +1,95 @@
 .user-management {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .user-management h2 {
-    margin-top: 0;
-  }
-  
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-management:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.user-management h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #333333;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.user-management p {
+  font-size: 16px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.user-management table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #444444;
+}
+
+.user-management table th,
+.user-management table td {
+  padding: 15px;
+  border: 1px solid #dddddd;
+  text-align: left;
+}
+
+.user-management table th {
+  background-color: #f7f7f7;
+  color: #555555;
+  font-weight: 600;
+}
+
+.user-management table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.user-management .action-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.user-management .action-buttons button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.user-management .action-buttons button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.user-management .search-bar {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-management .search-bar input[type="text"] {
+  padding: 10px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  width: 250px;
+  font-size: 16px;
+}
+
+.user-management .search-bar input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
